@@ -1,8 +1,10 @@
  let descricaoProduto = document.getElementById('descricao')
 let precoProduto = document.getElementById('preco')
+let btnSalvar = document.getElementById('btnSalvar')
 
 let linha = ''
 let produtos = []
+let indexEditado = null
 
 function renderizarTabela() {
     linha = ''
@@ -38,9 +40,25 @@ function addProduto() {
 
 function editarProduto(index) {
     const produto = produtos[index]
-    alert(`Produto selecionado: ${produto.descricao}`)
+    descricaoProduto.value = produto.descricao
+    precoProduto = produto.descricao
+    indexEditado = index
+    btnSalvar.innerText = 'Editar produto'
+    btnSalvar.onclick = atualizarProduto
 }
 
+function atualizarProduto(){
+    produtos[indexEditado].descricao = descricaoProduto.value
+    produtos[indexEditado].preco = Number(precoProduto.value)
+
+    renderizarTabela()
+
+    descricaoProduto.value= ''
+    precoProduto.value= ''
+    descricaoProduto.focus()
+    btnSalvar.innerText = 'Adicionar Produto'
+    btnSalvar.onclick = addProduto
+}
 function removerProduto(index) {
     const produto = produtos[index]
     alert(`Produto selecionado: ${produto.descricao}`)
