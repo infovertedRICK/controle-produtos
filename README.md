@@ -1,2 +1,2 @@
 # controle-produtos
-treinamento de html e javascript
+Estudo de HTML com Javascript
