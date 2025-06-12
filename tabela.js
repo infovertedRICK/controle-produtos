@@ -9,7 +9,7 @@ let indexEditado = null
 function renderizarTabela() {
     linha = ''
 
-    produtos.forEach((p, index) => linha += `
+    produtos.forEach((p, index) => linha += ` 
         <tr>
             <td>${p.codigo}</td>
             <td>${p.descricao}</td>

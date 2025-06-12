@@ -1,67 +1,63 @@
-let descricaoProduto = document.getElementById('descricao')
-let precoProduto = document.getElementById('preco')
-let btnSalvar = document.getElementById('btnSalvar')
+let categorias = JSON.parse(localStorage.getItem('categorias')) || [];
+let editandoId = null;
 
-let linha = ''
-let produtos = []
-let indexEditado = null
-
-function renderizarTabela() {
-    linha = ''
-
-    produtos.forEach((p, index) => linha += `
-        <tr>
-            <td>${p.codigo}</td>
-            <td>${p.descricao}</td>
-            <td>R$ ${p.preco.toFixed(2)}</td>
-            <td>
-                <button onclick="editarProduto(${index})" class="btn btn-md bg-warning">Editar</button>
-                <button onclick="removerProduto(${index})" class="btn btn-md bg-danger text-light">Remover</button>
-            </td>
-        </tr>
-    `)
-
-    document.getElementById('produtos').innerHTML = linha
+function salvarCategorias() {
+    localStorage.setItem('categorias', JSON.stringify(categorias));
 }
 
-function addProduto() {
-    produtos.push({
-        codigo: produtos.length + 1,
-        descricao: descricaoProduto.value,
-        preco: Number(precoProduto.value)
-    })
+function listarCategorias() {
+    const tabela = document.getElementById('categorias');
+    tabela.innerHTML = '';
 
-    renderizarTabela()
-
-    descricaoProduto.value = ''
-    precoProduto.value = ''
-    descricaoProduto.focus()
+    categorias.forEach((categoria, index) => {
+        tabela.innerHTML += `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${categoria}</td>
+                <td>
+                    <button class="btn btn-sm btn-warning" onclick="editarCategoria(${index})">Editar</button>
+                    <button class="btn btn-sm btn-danger" onclick="excluirCategoria(${index})">Excluir</button>
+                </td>
+            </tr>
+        `;
+    });
 }
 
-function editarProduto(index) {
-    const produto = produtos[index]
-    descricaoProduto.value = produto.descricao
-    precoProduto.value = produto.preco
-    indexEditado = index
-    btnSalvar.innerText = 'Editar Produto'
-    btnSalvar.onclick = atualizarProduto
+function addCategoria() {
+    const input = document.getElementById('nmCategoria');
+    const nome = input.value.trim();
+
+    if (nome === '') {
+        alert('Digite o nome da categoria.');
+        return;
+    }
+
+    if (editandoId === null) {
+        categorias.push(nome);
+    } else {
+        categorias[editandoId] = nome;
+        editandoId = null;
+        document.getElementById('btnSalvar').textContent = 'Criar Categoria';
+    }
+
+    input.value = '';
+    salvarCategorias();
+    listarCategorias();
 }
 
-function atualizarProduto() {
-    produtos[indexEditado].descricao = descricaoProduto.value
-    produtos[indexEditado].preco = Number(precoProduto.value)
-
-    renderizarTabela()
-    
-    descricaoProduto.value = ''
-    precoProduto.value = ''
-    descricaoProduto.focus()
-    btnSalvar.innerText = 'Adicionar Produto'
-    btnSalvar.onclick = addProduto
+function editarCategoria(index) {
+    const input = document.getElementById('nmCategoria');
+    input.value = categorias[index];
+    editandoId = index;
+    document.getElementById('btnSalvar').textContent = 'Salvar Alteração';
 }
 
-function removerProduto(index) {
-    const produto = produtos[index]
-    produtos.splice(index, 1)
-    renderizarTabela()
+function excluirCategoria(index) {
+    if (confirm('Tem certeza que quer excluir esta categoria?')) {
+        categorias.splice(index, 1);
+        salvarCategorias();
+        listarCategorias();
+    }
 }
+
+document.addEventListener('DOMContentLoaded', listarCategorias);
