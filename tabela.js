@@ -6,10 +6,23 @@ let linha = ''
 let produtos = []
 let indexEditado = null
 
-function renderizarTabela() {
+
+window.onload = () => {
+    const dadoSalvos = localStorage.getItem('produtoStorage')
+
+    if (dadoSalvos) {
+        produtos = JSON.parse(dadoSalvos)
+        renderizarTabela()
+    }
+}
+
+function salvarProduto (){
+    localStorage.setItem('produtoStorage', JSON.stringify(produtos))
+}
+function renderizarTabela (){
     linha = ''
 
-    produtos.forEach((p, index) => linha += ` 
+    produtos.forEach((p, index) => linha += `
         <tr>
             <td>${p.codigo}</td>
             <td>${p.descricao}</td>
